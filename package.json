@@ -1,12 +1,9 @@
 {
-  "name": "@blockbirdLabs/data-npm-package",
+  "name": "@blockbirdLabs/data-js-sdk",
   "version": "1.0.0",
   "description": "Blockbird Data node package",
   "main": "lib/index",
   "typings": "lib/index",
-  "repository": {
-    "url": "git://github.com/blockbirdLabs/data-npm-package"
-  },
   "scripts": {
     "start": "ts-node src/index.ts",
     "test": "jest",
@@ -34,5 +31,13 @@
     "dotenv": "^8.2.0",
     "firebase": "^7.13.1",
     "lodash": "^4.17.15"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blockbirdLabs/data-js-sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/blockbirdLabs/data-js-sdk/issues"
+  },
+  "homepage": "https://github.com/blockbirdLabs/data-js-sdk/blob/master/README.md"
 }
