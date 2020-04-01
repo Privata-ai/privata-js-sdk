@@ -1,0 +1,49 @@
+# Env variables
+.env*
+
+# compiled output
+dist
+dist-server
+tmp
+out-tsc
+build
+
+# dependencies
+node_modules
+npm-shrinkwrap.json
+
+# IDEs and editors
+.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode
+!.vscode/launch.json
+
+# misc
+.sass-cache
+connect.lock
+coverage
+libpeerconnection.log
+npm-debug.log*
+testem.log
+typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# System Files
+.DS_Store
+Thumbs.db
+yarn.lock
+yarn-error.log*
+yarn-debug.log*
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
