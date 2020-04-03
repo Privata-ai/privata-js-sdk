@@ -127,6 +127,7 @@ export default class PII {
 
   setTablesWithPersonalData = (database: Database) => {
     this.database = database
+    this.tablesWithPersonalData = []
     database.tables.forEach((table) => {
       if (table.hasPersonalData) {
         const columnsWithPersonalData: Array<string> = []

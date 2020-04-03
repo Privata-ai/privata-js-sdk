@@ -15,7 +15,7 @@ import { Query, NOT_RELEVANT } from './util/query'
   /**
    * Initialize
    */
-  initialize = async (apiUrl: string, dbId: string, dbSecret: string, sandbox = true) => {
+  initialize = async (apiUrl: string, dbId: string, dbSecret: string, sandbox = false) => {
     this.apiUrl = apiUrl
     this.dbId = dbId
     // log in as user
@@ -36,19 +36,29 @@ import { Query, NOT_RELEVANT } from './util/query'
   /**
    * Send queries
    */
-
-  sendQuery = async (queries: Array<Query>, sandbox = true) => {
-
-    let filteredQueries: Array<Query> = this.PII.getQueriesWithPersonalData(queries)
+  sendQuery = async (queries: Array<Query>, sandbox = false) => {
     const idToken = await auth.getIdToken(sandbox)
 
-    let result = await Axios.post(this.apiUrl + '/databases/' + this.dbId + '/queries', filteredQueries, {
+    let resultDatabase = await Axios.get(this.apiUrl + '/databases/' + this.dbId, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
     })
 
-    return result.status
+    if(resultDatabase.status === 200) {
+      this.PII.setTablesWithPersonalData(resultDatabase.data)
+    }
+
+    let filteredQueries: Array<Query> = this.PII.getQueriesWithPersonalData(queries)
+
+    let resultQueries = await Axios.post(this.apiUrl + '/databases/' + this.dbId + '/queries', filteredQueries, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
+      },
+    })
+
+    return resultQueries.status
   }
 }
