@@ -14,55 +14,68 @@ import { Query } from './util/query'
 
   /**
    * Initialize
+   * 
+   * Asynchronously signs in using an dbId and dbSecret.
+   *
+   * Fails with an error if the dbId and dbSecret do not match.
    */
   initialize = async (apiUrl: string, dbId: string, dbSecret: string, sandbox = false) => {
-    if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
+    try {
+      if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
+      
+      this.apiUrl = apiUrl
+      this.dbId = dbId
 
-    this.apiUrl = apiUrl
-    this.dbId = dbId
-    // log in as user
-    await auth.initializeApp(dbId, dbSecret, sandbox)
-    const idToken = await auth.getIdToken(sandbox)
-    // connect to API
-    let result = await Axios.get(this.apiUrl + '/databases/' + this.dbId, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`,
-      },
-    })
-    this.PII.setTablesWithPersonalData(result.data)
-
-    return result.status
+      // log in as user
+      await auth.initializeApp(dbId, dbSecret, sandbox)
+      return 200
+    } catch (error) {
+      throw error
+    }
   }
 
   /**
-   * Send queries
+   * Send Queries
+   * 
+   * Asynchronously gets the database and submit queries related to personal data.
+   *
+   * Fails with an error if the requests fails.
    */
   sendQuery = async (queries: Array<Query>, sandbox = false) => {
-    if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
+    try{
+      if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
 
-    const idToken = await auth.getIdToken(sandbox)
-    
-    let resultDatabase = await Axios.get(this.apiUrl + '/databases/' + this.dbId, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`,
-      },
-    })
+      const idToken = await auth.getIdToken(sandbox)
+      
+      let resultDatabase = await Axios.get(this.apiUrl + '/databases/' + this.dbId, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+      })
 
-    if(resultDatabase.status === 200) {
+      if(resultDatabase.status !== 200) {
+        throw new Error('Could not get database specified')
+      }
+
       this.PII.setTablesWithPersonalData(resultDatabase.data)
+
+      let filteredQueries: Array<Query> = this.PII.getQueriesWithPersonalData(queries)
+
+      let resultQueries = await Axios.post(this.apiUrl + '/databases/' + this.dbId + '/queries', filteredQueries, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+      })
+
+      if(resultQueries.status !== 201) {
+        throw new Error('Could not submit queries')
+      }
+
+      return resultQueries.status
+    } catch (error) {
+      throw error
     }
-
-    let filteredQueries: Array<Query> = this.PII.getQueriesWithPersonalData(queries)
-
-    let resultQueries = await Axios.post(this.apiUrl + '/databases/' + this.dbId + '/queries', filteredQueries, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`,
-      },
-    })
-
-    return resultQueries.status
   }
 }
