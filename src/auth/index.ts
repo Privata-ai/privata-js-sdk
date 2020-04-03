@@ -14,7 +14,7 @@ var firebaseConfigSandBox  = {
 firebase.initializeApp(firebaseConfigSandBox, 'sandbox')
 //firebase.initializeApp(firebaseConfigProduction, 'production')
 
-export async function initialize(dbId: string, dbSecret: string, sandbox: boolean) {
+export async function initializeApp(dbId: string, dbSecret: string, sandbox: boolean) {
   dbId = dbId + '@blockbird.ventures'
   await firebase
     .app(sandbox ? 'sandbox' : 'production')

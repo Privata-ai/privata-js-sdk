@@ -19,7 +19,7 @@ import { Query, NOT_RELEVANT } from './util/query'
     this.apiUrl = apiUrl
     this.dbId = dbId
     // log in as user
-    await auth.initialize(dbId, dbSecret, sandbox)
+    await auth.initializeApp(dbId, dbSecret, sandbox)
     const idToken = await auth.getIdToken(sandbox)
     // connect to API
     let result = await Axios.get(this.apiUrl + '/databases/' + this.dbId, {
