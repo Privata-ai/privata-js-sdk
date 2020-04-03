@@ -11,7 +11,7 @@ describe('Authenticate', () => {
     bbaudit = new BbAudit()
   })
   it('should return status 200 on success', async () => {
-    let result = await bbaudit.initialize(process.env.APIURL, process.env.DBID, process.env.DBSECRET)
+    let result = await bbaudit.initialize(process.env.APIURL, process.env.DBID, process.env.DBSECRET, true)
     expect(result).toBe(200)
   })
 
@@ -22,10 +22,10 @@ describe('Send Queries', () => {
 
   beforeAll(async () => {
     bbaudit = new BbAudit()
-    await bbaudit.initialize(process.env.APIURL, process.env.DBID, process.env.DBSECRET)
+    await bbaudit.initialize(process.env.APIURL, process.env.DBID, process.env.DBSECRET, true)
   })
 
-  it('should submit queries', async () => {
+  it('should submit queries [Tables]', async () => {
     let table: Table = { table: 'personName', columns: ['familyName', 'givenName'] }
     let query: Query = {
       action: 'Read',
@@ -36,9 +36,24 @@ describe('Send Queries', () => {
       timestamp: 2222222,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendquery(queries)
+    let result = await bbaudit.sendQuery(queries, true)
     expect(result).toBe(201)
   })
+
+  it('should submit queries [SQL Query]', async () => {
+    const sqlQuery = `SELECT familyName FROM personName`
+    let query: Query = {
+      sql: sqlQuery,
+      timestamp: 1571178690,
+      user: '2d4da3f1-6bd3-494f-ba08-eda4fe88f9e9',
+      group: 'Admins',
+      returnedRows: 6,
+    }
+    let queries: Array<Query> = [query]
+    let result = await bbaudit.sendQuery(queries, true)
+    expect(result).toBe(201)
+  })
+
   it ('should not send non-Pii data', async () => {
     let table: Table = { table: 'personName', columns: ['address', 'dateOfBirth'] }
     let query: Query = {
@@ -50,7 +65,7 @@ describe('Send Queries', () => {
       timestamp: 2222222,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendquery(queries)
+    let result = await bbaudit.sendQuery(queries, true)
     expect(result).toBe(201)
   })
 })

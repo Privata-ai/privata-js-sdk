@@ -1,24 +1,26 @@
 import * as auth from './auth'
-import PiiTablesColumns from './util'
+import PII from './util'
 import Axios from 'axios'
-import { Query } from './util/query'
+import { Query, NOT_RELEVANT } from './util/query'
+
 /**
  * NPM Module for sending data queries to blockbird.data
  */
-export default class BbAudit {
-  private piiTablesColums = new PiiTablesColumns()
+
+ export default class BbAudit {
+  private PII = new PII()
   private apiUrl: string
   private dbId: string
 
   /**
    * Initialize
    */
-  initialize = async (apiUrl: string, dbId: string, dbSecret: string) => {
+  initialize = async (apiUrl: string, dbId: string, dbSecret: string, sandbox = true) => {
     this.apiUrl = apiUrl
     this.dbId = dbId
     // log in as user
-    await auth.initialize(dbId, dbSecret)
-    const idToken = await auth.getIdToken()
+    await auth.initialize(dbId, dbSecret, sandbox)
+    const idToken = await auth.getIdToken(sandbox)
     // connect to API
     let result = await Axios.get(this.apiUrl + '/databases/' + this.dbId, {
       headers: {
@@ -26,7 +28,7 @@ export default class BbAudit {
         Authorization: `Bearer ${idToken}`,
       },
     })
-    this.piiTablesColums.getTablesWithPersonalData(result.data)
+    this.PII.setTablesWithPersonalData(result.data)
 
     return result.status
   }
@@ -35,9 +37,10 @@ export default class BbAudit {
    * Send queries
    */
 
-  sendquery = async (queries: Array<Query>) => {
-    let filteredQueries: Array<Query> = this.piiTablesColums.getQueriesWithPersonalData(queries)
-    const idToken = await auth.getIdToken()
+  sendQuery = async (queries: Array<Query>, sandbox = true) => {
+
+    let filteredQueries: Array<Query> = this.PII.getQueriesWithPersonalData(queries)
+    const idToken = await auth.getIdToken(sandbox)
 
     let result = await Axios.post(this.apiUrl + '/databases/' + this.dbId + '/queries', filteredQueries, {
       headers: {

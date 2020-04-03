@@ -1,10 +1,15 @@
-import { Query } from './query';
+import { Query, Database } from './query';
 /**
- * Contains the list of tables and columns that contain Pii
+ * Contains the list of tables and columns that contain PII (Personally identifiable information)
  */
-export default class PiiTablesColumns {
+export default class PII {
     private tablesWithPersonalData;
+    private database;
     constructor();
-    getTablesWithPersonalData: (allTables: any) => void;
+    private getAction;
+    private parseAction;
+    private parseColumns;
+    private parseSql;
+    setTablesWithPersonalData: (database: Database) => void;
     getQueriesWithPersonalData: (queries: Query[]) => Query[];
 }

@@ -1,2 +1,2 @@
-export declare function initialize(dbId: string, dbSecret: string): Promise<void>;
-export declare function getIdToken(): Promise<string>;
+export declare function initialize(dbId: string, dbSecret: string, sandbox: boolean): Promise<void>;
+export declare function getIdToken(sandbox: boolean): Promise<string>;
