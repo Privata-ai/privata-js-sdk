@@ -12,6 +12,11 @@ import { Query } from './util/query'
   private apiUrl: string
   private dbId: string
 
+  constructor(apiUrl: string, dbId: string){
+    this.apiUrl = apiUrl
+    this.dbId = dbId
+  }
+
   /**
    * Initialize
    * 
@@ -19,15 +24,12 @@ import { Query } from './util/query'
    *
    * Fails with an error if the dbId and dbSecret do not match.
    */
-  initialize = async (apiUrl: string, dbId: string, dbSecret: string, sandbox = false) => {
+  initialize = async (dbSecret: string, sandbox = false) => {
     try {
       if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
-      
-      this.apiUrl = apiUrl
-      this.dbId = dbId
 
       // log in as user
-      await auth.initializeApp(dbId, dbSecret, sandbox)
+      await auth.initializeApp(this.dbId, dbSecret, sandbox)
       return 200
     } catch (error) {
       throw error

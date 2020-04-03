@@ -8,10 +8,10 @@ describe('Authenticate', () => {
   let bbaudit: BbAudit
 
   beforeAll(() => {
-    bbaudit = new BbAudit()
+    bbaudit = new BbAudit(process.env.APIURL, process.env.DBID,)
   })
   it('should return status 200 on success', async () => {
-    let result = await bbaudit.initialize(process.env.APIURL, process.env.DBID, process.env.DBSECRET, true)
+    let result = await bbaudit.initialize(process.env.DBSECRET, true)
     expect(result).toBe(200)
   })
 
@@ -21,8 +21,8 @@ describe('Send Queries', () => {
   let bbaudit: BbAudit
 
   beforeAll(async () => {
-    bbaudit = new BbAudit()
-    await bbaudit.initialize(process.env.APIURL, process.env.DBID, process.env.DBSECRET, true)
+    bbaudit = new BbAudit(process.env.APIURL, process.env.DBID,)
+    await bbaudit.initialize(process.env.DBSECRET, true)
   })
 
   it('should submit queries [Tables]', async () => {
@@ -74,13 +74,13 @@ describe('Production environment should fail', () => {
   let bbaudit: BbAudit
 
   beforeAll(() => {
-    bbaudit = new BbAudit()
+    bbaudit = new BbAudit(process.env.APIURL, process.env.DBID,)
   })
 
   it('should throw an error when initializing in production env', async () => {
     expect.assertions(1)
     try {
-      await bbaudit.initialize(process.env.APIURL, process.env.DBID, process.env.DBSECRET)
+      await bbaudit.initialize(process.env.DBSECRET)
     } catch (e) {
       expect(e.message).toBe('Production environment not available. Please use the sandbox environment.')
     }
