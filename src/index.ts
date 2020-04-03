@@ -1,7 +1,7 @@
 import * as auth from './auth'
 import PII from './util'
 import Axios from 'axios'
-import { Query, NOT_RELEVANT } from './util/query'
+import { Query } from './util/query'
 
 /**
  * NPM Module for sending data queries to blockbird.data
@@ -16,6 +16,8 @@ import { Query, NOT_RELEVANT } from './util/query'
    * Initialize
    */
   initialize = async (apiUrl: string, dbId: string, dbSecret: string, sandbox = false) => {
+    if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
+
     this.apiUrl = apiUrl
     this.dbId = dbId
     // log in as user
@@ -37,8 +39,10 @@ import { Query, NOT_RELEVANT } from './util/query'
    * Send queries
    */
   sendQuery = async (queries: Array<Query>, sandbox = false) => {
-    const idToken = await auth.getIdToken(sandbox)
+    if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
 
+    const idToken = await auth.getIdToken(sandbox)
+    
     let resultDatabase = await Axios.get(this.apiUrl + '/databases/' + this.dbId, {
       headers: {
         'Content-Type': 'application/json',
