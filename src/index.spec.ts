@@ -8,10 +8,10 @@ describe('Authenticate', () => {
   let bbaudit: BbAudit
 
   beforeAll(() => {
-    bbaudit = new BbAudit(process.env.APIURL, process.env.DBID,)
+    bbaudit = new BbAudit(true, process.env.APIURL)
   })
   it('should return status 200 on success', async () => {
-    let result = await bbaudit.initialize(process.env.DBSECRET, true)
+    let result = await bbaudit.initialize(process.env.DBID, process.env.DBSECRET)
     expect(result).toBe(200)
   })
 
@@ -21,8 +21,8 @@ describe('Send Queries', () => {
   let bbaudit: BbAudit
 
   beforeAll(async () => {
-    bbaudit = new BbAudit(process.env.APIURL, process.env.DBID,)
-    await bbaudit.initialize(process.env.DBSECRET, true)
+    bbaudit = new BbAudit(true, process.env.APIURL)
+    await bbaudit.initialize(process.env.DBID, process.env.DBSECRET)
   })
 
   it('should submit queries [Tables]', async () => {
@@ -36,7 +36,7 @@ describe('Send Queries', () => {
       timestamp: 2222222,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendQuery(queries, true)
+    let result = await bbaudit.sendQuery(queries)
     expect(result).toBe(201)
   })
 
@@ -50,7 +50,7 @@ describe('Send Queries', () => {
       returnedRows: 6,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendQuery(queries, true)
+    let result = await bbaudit.sendQuery(queries)
     expect(result).toBe(201)
   })
 
@@ -65,7 +65,7 @@ describe('Send Queries', () => {
       timestamp: 2222222,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendQuery(queries, true)
+    let result = await bbaudit.sendQuery(queries)
     expect(result).toBe(201)
   })
 })
@@ -73,36 +73,12 @@ describe('Send Queries', () => {
 describe('Production environment should fail', () => {
   let bbaudit: BbAudit
 
-  beforeAll(() => {
-    bbaudit = new BbAudit(process.env.APIURL, process.env.DBID,)
-  })
-
   it('should throw an error when initializing in production env', async () => {
     expect.assertions(1)
     try {
-      await bbaudit.initialize(process.env.DBSECRET)
+      bbaudit = new BbAudit(false, process.env.APIURL)
     } catch (e) {
       expect(e.message).toBe('Production environment not available. Please use the sandbox environment.')
     }
   })
-
-  it('should throw an error when sending queries in production env', async () => {
-    expect.assertions(1)
-    try {
-      let table: Table = { table: 'personName', columns: ['address', 'dateOfBirth'] }
-      let query: Query = {
-        action: 'IncorrectAction',
-        group: 'physicians',
-        returnedRows: 4,
-        tables: [table],
-        user: 'user4',
-        timestamp: 2222222,
-      }
-      let queries: Array<Query> = [query]
-      await bbaudit.sendQuery(queries)
-    } catch (e) {
-      expect(e.message).toBe('Production environment not available. Please use the sandbox environment.')
-    }
-  })
-
 })

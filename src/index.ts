@@ -11,10 +11,13 @@ import { Query } from './util/query'
   private PII = new PII()
   private apiUrl: string
   private dbId: string
+  private sandbox: boolean
 
-  constructor(apiUrl: string, dbId: string){
+  constructor(sandbox = false, apiUrl = 'https://api-staging.blockbird.ventures'){
+    if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
+
+    this.sandbox = sandbox
     this.apiUrl = apiUrl
-    this.dbId = dbId
   }
 
   /**
@@ -24,12 +27,11 @@ import { Query } from './util/query'
    *
    * Fails with an error if the dbId and dbSecret do not match.
    */
-  initialize = async (dbSecret: string, sandbox = false) => {
+  initialize = async (dbId: string, dbSecret: string) => {
     try {
-      if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
-
       // log in as user
-      await auth.initializeApp(this.dbId, dbSecret, sandbox)
+      this.dbId = dbId
+      await auth.initializeApp(dbId, dbSecret, this.sandbox)
       return 200
     } catch (error) {
       throw error
@@ -43,11 +45,9 @@ import { Query } from './util/query'
    *
    * Fails with an error if the requests fails.
    */
-  sendQuery = async (queries: Array<Query>, sandbox = false) => {
+  sendQuery = async (queries: Array<Query>) => {
     try{
-      if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
-
-      const idToken = await auth.getIdToken(sandbox)
+      const idToken = await auth.getIdToken(this.sandbox)
       
       let resultDatabase = await Axios.get(this.apiUrl + '/databases/' + this.dbId, {
         headers: {
