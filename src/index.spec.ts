@@ -36,7 +36,7 @@ describe('Send Queries', () => {
       timestamp: 2222222,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendQuery(queries)
+    let result = await bbaudit.sendQueries(queries)
     expect(result).toBe(201)
   })
 
@@ -50,7 +50,7 @@ describe('Send Queries', () => {
       returnedRows: 6,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendQuery(queries)
+    let result = await bbaudit.sendQueries(queries)
     expect(result).toBe(201)
   })
 
@@ -65,7 +65,7 @@ describe('Send Queries', () => {
       timestamp: 2222222,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendQuery(queries)
+    let result = await bbaudit.sendQueries(queries)
     expect(result).toBe(201)
   })
 })

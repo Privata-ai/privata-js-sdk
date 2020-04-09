@@ -45,7 +45,7 @@ import { Query } from './util/query'
    *
    * Fails with an error if the requests fails.
    */
-  sendQuery = async (queries: Array<Query>) => {
+  sendQueries = async (queries: Array<Query>) => {
     try{
       const idToken = await auth.getIdToken(this.sandbox)
       
