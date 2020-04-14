@@ -1,7 +1,7 @@
 {
   "name": "@blockbirdLabs/data-js-sdk",
   "version": "1.0.0",
-  "description": "Blockbird Data node package",
+  "description": "Privata.ai node package",
   "main": "lib/index",
   "typings": "lib/index",
   "scripts": {
@@ -10,7 +10,7 @@
     "build": "tsc -p .",
     "test:watch": "jest --coverage --watchAll --verbose"
   },
-  "author": "blockbird.data",
+  "author": "privata.ai",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^25.1.4",

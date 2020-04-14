@@ -7,14 +7,14 @@ import { Query } from './util/query'
  * NPM Module for sending data queries to blockbird.data
  */
 
- export default class BbAudit {
+export default class PrivataAudit {
   private PII = new PII()
   private apiUrl: string
   private dbId: string
   private sandbox: boolean
 
-  constructor(sandbox = false, apiUrl = 'https://api-staging.blockbird.ventures'){
-    if(!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
+  constructor(sandbox = false, apiUrl = 'https://api-staging.blockbird.ventures') {
+    if (!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
 
     this.sandbox = sandbox
     this.apiUrl = apiUrl
@@ -22,7 +22,7 @@ import { Query } from './util/query'
 
   /**
    * Initialize
-   * 
+   *
    * Asynchronously signs in using an dbId and dbSecret.
    *
    * Fails with an error if the dbId and dbSecret do not match.
@@ -40,15 +40,15 @@ import { Query } from './util/query'
 
   /**
    * Send Queries
-   * 
+   *
    * Asynchronously gets the database and submit queries related to personal data.
    *
    * Fails with an error if the requests fails.
    */
   sendQueries = async (queries: Array<Query>) => {
-    try{
+    try {
       const idToken = await auth.getIdToken(this.sandbox)
-      
+
       let resultDatabase = await Axios.get(this.apiUrl + '/databases/' + this.dbId, {
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ import { Query } from './util/query'
         },
       })
 
-      if(resultDatabase.status !== 200) {
+      if (resultDatabase.status !== 200) {
         throw new Error('Could not get database specified')
       }
 
@@ -71,7 +71,7 @@ import { Query } from './util/query'
         },
       })
 
-      if(resultQueries.status !== 201) {
+      if (resultQueries.status !== 201) {
         throw new Error('Could not submit queries')
       }
 
