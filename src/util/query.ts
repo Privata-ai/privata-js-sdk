@@ -21,23 +21,23 @@ export interface From {
 
 export interface Database {
   id: string
-	type: string
-	host: string
-	port: string
-	organizationId: string
-	database: string
-	tables: DatabaseTable[]
-	applications?: Application[]
+  type: string
+  host: string
+  port: string
+  organizationId: string
+  database: string
+  tables: DatabaseTable[]
+  applications?: Application[]
 }
 
 interface Application {
   id: string
-	name: string
-	language: string
-	organizationId: string
-	createdAt: string
-	updatedAt: string
-	databases?: Database[]
+  name: string
+  language: string
+  organizationId: string
+  createdAt: string
+  updatedAt: string
+  databases?: Database[]
 }
 
 interface DatabaseTable {
