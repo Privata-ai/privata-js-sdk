@@ -5,7 +5,7 @@ This repository is the NPM package to send data accesses from a client's Node ap
 For testing, create an `.env` file as follows:
 
 ```
-DBID=testing-database-id
+dbKey=testing-database-id
 DBSECRET=testing-database-secret
 APIURL=http://api-url:3000
 ```

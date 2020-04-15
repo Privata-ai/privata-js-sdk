@@ -11,10 +11,9 @@ describe('Authenticate', () => {
     bbaudit = new BbAudit(true, process.env.APIURL)
   })
   it('should return status 200 on success', async () => {
-    let result = await bbaudit.initialize(process.env.DBID, process.env.DBSECRET)
+    let result = await bbaudit.initialize(process.env.dbKey, process.env.DBSECRET)
     expect(result).toBe(200)
   })
-
 })
 
 describe('Send Queries', () => {
@@ -22,7 +21,7 @@ describe('Send Queries', () => {
 
   beforeAll(async () => {
     bbaudit = new BbAudit(true, process.env.APIURL)
-    await bbaudit.initialize(process.env.DBID, process.env.DBSECRET)
+    await bbaudit.initialize(process.env.dbKey, process.env.DBSECRET)
   })
 
   it('should submit queries [Tables]', async () => {
@@ -54,7 +53,7 @@ describe('Send Queries', () => {
     expect(result).toBe(201)
   })
 
-  it ('should not send non-Pii data', async () => {
+  it('should not send non-Pii data', async () => {
     let table: Table = { table: 'personName', columns: ['address', 'dateOfBirth'] }
     let query: Query = {
       action: 'IncorrectAction',

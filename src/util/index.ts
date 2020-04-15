@@ -13,7 +13,7 @@ export default class PII {
   constructor() {
     this.tablesWithPersonalData = []
   }
-  
+
   private getAction = (type: string) => {
     let action = ''
     switch (type) {
@@ -35,11 +35,11 @@ export default class PII {
     }
     return action
   }
-  
+
   private parseAction = (sqlQuery: string) => {
     const parser = new Parser()
     const ast = parser.astify(sqlQuery)
-  
+
     let action = ''
     if (Array.isArray(ast)) {
       for (const elem of ast) {
@@ -48,26 +48,26 @@ export default class PII {
     } else {
       action = this.getAction(ast.type)
     }
-  
+
     return action
   }
-  
+
   private parseColumns = (sqlQuery: string, database: Database) => {
     const parser = new Parser()
     const columnList = parser.columnList(sqlQuery)
-  
+
     const columns = []
     for (const columnParsed of columnList) {
       const columnSplitted = columnParsed.split('::')
       let tableName = ''
-  
+
       if (columnSplitted[1] === 'null') {
         let ast = parser.astify(sqlQuery)
-  
+
         if (Array.isArray(ast)) {
           ast = ast[0]
         }
-  
+
         // when for some reason the table comes as null, we need to look for the table
         // we need to figure out a way to associate columns to their table when there are several tables
         // for now we assume the first slot
@@ -77,7 +77,7 @@ export default class PII {
           if (from.table) tableName = from.table
           else continue
         }
-  
+
         // if ast as "table" field, we try to get the tableName from it
         else if ('table' in ast && ast.table != undefined) {
           if (ast.table[0]) tableName = ast.table[0].table
@@ -86,16 +86,16 @@ export default class PII {
       } else {
         tableName = columnSplitted[1]
       }
-  
+
       if (columnSplitted[2] === '(.*)') {
         // get all columns of the table
         const columnNames = database.tables
-          .filter(table => table.name === tableName)
-          .map(table => table.columns.map(column => column.name))
-  
+          .filter((table) => table.name === tableName)
+          .map((table) => table.columns.map((column) => column.name))
+
         if (columnNames.length === 0) continue
-  
-        columnNames[0].forEach(columnName => {
+
+        columnNames[0].forEach((columnName) => {
           columns.push({ table: tableName, column: columnName })
         })
       } else {
@@ -104,21 +104,21 @@ export default class PII {
     }
     return columns
   }
-  
+
   private parseSql = (sqlQuery: string) => {
     const columns = this.parseColumns(sqlQuery, this.database)
     const action = this.parseAction(sqlQuery)
-  
+
     if (action === NOT_RELEVANT) return { tables: [], action: action }
-  
+
     const tables: Array<Table> = []
-  
+
     // assign columns to each table
     for (const column of columns) {
       const columnsInTable: any = columns
-        .filter(table => table.table === column.table && !tables.some(table => table.table === column.table))
-        .map(column => column.column)
-  
+        .filter((table) => table.table === column.table && !tables.some((table) => table.table === column.table))
+        .map((column) => column.column)
+
       if (columnsInTable.length === 0) continue
       tables.push({ table: column.table, columns: columnsInTable })
     }
@@ -143,23 +143,22 @@ export default class PII {
   }
 
   getQueriesWithPersonalData = (queries: Array<Query>) => {
-
     // parse sql query if provided
-		for (const query of queries) {
-			if (query.sql) {
-				try {
-					const parsed = this.parseSql(query.sql)
-					query.tables = parsed.tables
-					query.action = parsed.action
-				} catch (error) {
-					console.error(`ERROR: could not parse query "${query.sql}"`, error)
-					query.tables = []
-					query.action = NOT_RELEVANT
-					continue
-				}
-			}
+    for (const query of queries) {
+      if (query.sql) {
+        try {
+          const parsed = this.parseSql(query.sql)
+          query.tables = parsed.tables
+          query.action = parsed.action
+        } catch (error) {
+          console.error(`ERROR: could not parse query "${query.sql}"`, error)
+          query.tables = []
+          query.action = NOT_RELEVANT
+          continue
+        }
+      }
     }
-    
+
     const queriesWithPersonalData: Array<Query> = []
     queries.forEach((query) => {
       const tablesWithPersonalDataInQuery: Array<Table> = []
