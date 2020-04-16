@@ -10,7 +10,9 @@ Privata.ai is a modern User Behavior Analytic (UBA) used to detect insider threa
 
 Our platform flags sensitive data on different databases and then monitors individual user accesses to that data through the applications. Our SDK is used within your application's code to send information about these accesses to our API so your customers can view and analyze their users behaviour.
 
-## Testing
+## SDK development
+
+### Testing
 
 For testing, create an `.env` file as follows:
 
