@@ -1,5 +1,5 @@
 {
-  "name": "privata-java-sdk",
+  "name": "privata-js-sdk",
   "version": "0.1.0",
   "description": "Privata.ai node package",
   "main": "lib/index",
