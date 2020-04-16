@@ -1,6 +1,16 @@
-# Blockbird Data NPM Package
+# Privata.ai SDK
 
-This repository is the NPM package to send data accesses from a client's Node application to the Blockbird Data.
+A JavaScript SDK to facilitate the interaction with [Privata.ai](https://privata.ai/).
+
+You can find more about this SDK on [our documentation](https://documentation.privata.ai/sdk/js).
+
+## What is Privata.ai?
+
+Privata.ai is a modern User Behavior Analytic (UBA) used to detect insider threats within an application.
+
+Our platform flags sensitive data on different databases and then monitors individual user accesses to that data through the applications. Our SDK is used within your application's code to send information about these accesses to our API so your customers can view and analyze their users behaviour.
+
+## Testing
 
 For testing, create an `.env` file as follows:
 
@@ -10,17 +20,10 @@ DBSECRET=testing-database-secret
 APIURL=http://api-url:3000
 ```
 
-Note: To test locally change the fireabase config in `auth/index.ts`
+Note: To test locally change the Fireabase config in `auth/index.ts`
 
 Then you can run:
 
 ```
 npm run test
 ```
-
-## Still to do
-
-- [ ] The requests are not batched. Currently every query that is sent is uploaded individually to the API. On the Java package, we batch the queries to reduce network traffic
-- [x] ~~We only get the list of Pii Tables and Columns during initialization. If a user edits a database on the Web App we currently don't recheck. We should check in on the Pii Tables and Columns (perhaps every hour) to get the latest.~~ UPDATE: We do it before every query submission.
-- [ ] Update documentation for NPM users
-- [ ] Publish package
