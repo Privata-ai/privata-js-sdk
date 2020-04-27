@@ -1,27 +1,27 @@
-import BbAudit, * as index from './index'
+import PrivataAudit, * as index from './index'
 import { Query, Table } from './util/query'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
 
 describe('Authenticate', () => {
-  let bbaudit: BbAudit
+  let privataAudit: PrivataAudit
 
   beforeAll(() => {
-    bbaudit = new BbAudit(true, process.env.APIURL)
+    privataAudit = new PrivataAudit(true, process.env.APIURL)
   })
   it('should return status 200 on success', async () => {
-    let result = await bbaudit.initialize(process.env.dbKey, process.env.DBSECRET)
+    let result = await privataAudit.initialize(process.env.DBID, process.env.DBSECRET)
     expect(result).toBe(200)
   })
 })
 
 describe('Send Queries', () => {
-  let bbaudit: BbAudit
+  let privataAudit: PrivataAudit
 
   beforeAll(async () => {
-    bbaudit = new BbAudit(true, process.env.APIURL)
-    await bbaudit.initialize(process.env.dbKey, process.env.DBSECRET)
+    privataAudit = new PrivataAudit(true, process.env.APIURL)
+    await privataAudit.initialize(process.env.DBID, process.env.DBSECRET)
   })
 
   it('should submit queries [Tables]', async () => {
@@ -35,7 +35,7 @@ describe('Send Queries', () => {
       timestamp: 2222222,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendQueries(queries)
+    let result = await privataAudit.sendQueries(queries)
     expect(result).toBe(201)
   })
 
@@ -49,7 +49,7 @@ describe('Send Queries', () => {
       returnedRows: 6,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendQueries(queries)
+    let result = await privataAudit.sendQueries(queries)
     expect(result).toBe(201)
   })
 
@@ -64,18 +64,18 @@ describe('Send Queries', () => {
       timestamp: 2222222,
     }
     let queries: Array<Query> = [query]
-    let result = await bbaudit.sendQueries(queries)
+    let result = await privataAudit.sendQueries(queries)
     expect(result).toBe(201)
   })
 })
 
 describe('Production environment should fail', () => {
-  let bbaudit: BbAudit
+  let privataAudit: PrivataAudit
 
   it('should throw an error when initializing in production env', async () => {
     expect.assertions(1)
     try {
-      bbaudit = new BbAudit(false, process.env.APIURL)
+      privataAudit = new PrivataAudit(false, process.env.APIURL)
     } catch (e) {
       expect(e.message).toBe('Production environment not available. Please use the sandbox environment.')
     }

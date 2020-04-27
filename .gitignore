@@ -43,8 +43,3 @@ Thumbs.db
 yarn.lock
 yarn-error.log*
 yarn-debug.log*
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml

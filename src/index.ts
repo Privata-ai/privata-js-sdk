@@ -7,7 +7,7 @@ import { Query } from './util/query'
  * NPM Module for sending data queries to blockbird.data
  */
 
-export default class BbAudit {
+export default class PrivataAudit {
   private PII = new PII()
   private apiUrl: string
   private dbKey: string
@@ -48,7 +48,6 @@ export default class BbAudit {
   sendQueries = async (queries: Array<Query>) => {
     try {
       const idToken = await auth.getIdToken(this.sandbox)
-
       let resultDatabase = await Axios.get(this.apiUrl + '/databases/' + this.dbKey, {
         headers: {
           'Content-Type': 'application/json',
