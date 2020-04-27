@@ -10,7 +10,7 @@ import { Query } from './util/query'
 export default class PrivataAudit {
   private PII = new PII()
   private apiUrl: string
-  private dbId: string
+  private dbKey: string
   private sandbox: boolean
 
   constructor(sandbox = false, apiUrl = 'https://api-staging.blockbird.ventures') {
@@ -23,15 +23,15 @@ export default class PrivataAudit {
   /**
    * Initialize
    *
-   * Asynchronously signs in using an dbId and dbSecret.
+   * Asynchronously signs in using an dbKey and dbSecret.
    *
-   * Fails with an error if the dbId and dbSecret do not match.
+   * Fails with an error if the dbKey and dbSecret do not match.
    */
-  initialize = async (dbId: string, dbSecret: string) => {
+  initialize = async (dbKey: string, dbSecret: string) => {
     try {
       // log in as user
-      this.dbId = dbId
-      await auth.initializeApp(dbId, dbSecret, this.sandbox)
+      this.dbKey = dbKey
+      await auth.initializeApp(dbKey, dbSecret, this.sandbox)
       return 200
     } catch (error) {
       throw error
@@ -48,8 +48,7 @@ export default class PrivataAudit {
   sendQueries = async (queries: Array<Query>) => {
     try {
       const idToken = await auth.getIdToken(this.sandbox)
-
-      let resultDatabase = await Axios.get(this.apiUrl + '/databases/' + this.dbId, {
+      let resultDatabase = await Axios.get(this.apiUrl + '/databases/' + this.dbKey, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${idToken}`,
@@ -64,7 +63,7 @@ export default class PrivataAudit {
 
       let filteredQueries: Array<Query> = this.PII.getQueriesWithPersonalData(queries)
 
-      let resultQueries = await Axios.post(this.apiUrl + '/databases/' + this.dbId + '/queries', filteredQueries, {
+      let resultQueries = await Axios.post(this.apiUrl + '/databases/' + this.dbKey + '/queries', filteredQueries, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${idToken}`,

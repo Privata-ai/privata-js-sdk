@@ -17,7 +17,7 @@ Our platform flags sensitive data on different databases and then monitors indiv
 For testing, create an `.env` file as follows:
 
 ```
-DBID=testing-database-id
+dbKey=testing-database-id
 DBSECRET=testing-database-secret
 APIURL=http://api-url:3000
 ```
