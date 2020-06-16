@@ -15,8 +15,8 @@
   "devDependencies": {
     "@types/jest": "^25.1.4",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "jest": "^25.2.3",
     "prettier": "^2.0.2",
     "ts-jest": "^25.2.1",
@@ -29,7 +29,7 @@
     "@types/lodash": "^4.14.149",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
-    "firebase": "^7.13.1",
+    "firebase": "^7.15.1",
     "lodash": "^4.17.15",
     "node-sql-parser": "^1.7.11"
   },
