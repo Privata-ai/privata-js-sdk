@@ -13,7 +13,7 @@ export default class PrivataAudit {
   private dbKey: string
   private sandbox: boolean
 
-  constructor(sandbox = false, apiUrl = 'https://api-staging.blockbird.ventures') {
+  constructor(sandbox = false, apiUrl = 'https://api-sandbox.privata.ai') {
     if (!sandbox) throw new Error('Production environment not available. Please use the sandbox environment.')
 
     this.sandbox = sandbox
