@@ -31,7 +31,7 @@
     "dotenv": "^8.2.0",
     "firebase": "^7.15.5",
     "lodash": "^4.17.15",
-    "node-sql-parser": "^2.2.0"
+    "node-sql-parser": "^2.2.2"
   },
   "repository": {
     "type": "git",
